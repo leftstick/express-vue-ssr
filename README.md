@@ -1,6 +1,6 @@
 # express-vue-ssr
 
-欢迎来到主站重构战场，为了更好的开发体验，我将分以下几个章节讲述主站新架构，以及开发指导。
+欢迎来到 ssr 的新世界，为了更好的开发体验，我将分以下几个章节讲述主站新架构，以及开发指导。
 
 > 值得注意的是，我们会尽可能的在新架构中遵循[Convention over configuration](https://en.wikipedia.org/wiki/Convention_over_configuration)原则，用简单而有力的约定来替代灵活但繁琐的配置。以降低功能开发的上手复杂度、并且使项目代码更加的[Declarative](https://en.wikipedia.org/wiki/Declarative_programming)
 
