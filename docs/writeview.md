@@ -10,7 +10,6 @@
 // 引入依赖
 import Vue from 'vue'
 import Router from 'vue-router'
-import { constructRoutes } from '../lang'
 
 // 注册路由管理器
 Vue.use(Router)
@@ -26,11 +25,11 @@ export function createRouter() {
     mode: 'history',
     base: __dirname,
     scrollBehavior: () => ({ y: 0 }),
-    routes: constructRoutes([
+    routes: [
       // 以下是各路由注册
       { path: '/', component: HomeView },
       { path: '*', component: NotFoundView }
-    ])
+    ]
   })
 }
 ```
