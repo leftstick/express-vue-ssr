@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "stylusSupremacy.insertBraces": false,
+  "stylusSupremacy.insertColons": false,
+  "stylusSupremacy.insertSemicolons": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "vue"
+    }
+  ],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "prettier.disableLanguages": ["vue"]
+}

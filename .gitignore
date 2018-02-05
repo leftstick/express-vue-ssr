@@ -1,0 +1,12 @@
+#npm
+node_modules/
+
+#compile
+dist/
+logs/
+
+#osx
+.DS_Store
+
+#release
+launch.sh
