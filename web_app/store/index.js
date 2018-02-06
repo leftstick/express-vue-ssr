@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import home from './modules/home'
+import tasks from './modules/tasks'
 
 Vue.use(Vuex)
 
 export function createStore() {
   return new Vuex.Store({
     modules: {
-      home
+      tasks
     }
   })
 }

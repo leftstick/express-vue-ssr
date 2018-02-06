@@ -1,15 +1,69 @@
 <template>
-  <div >
-    // TBD, 首页及其他页面是我们2季度后迁移的目标，暂不考虑
-    <div>
-      首页
+  <div>
+    <div class="jumbotron">
+      <div class="desc">
+        <h1>欢迎来到vue-ssr</h1>
+        <br/>
+        <p v-for="desc of descriptions" :key="desc">
+          {{ desc }}
+        </p>
+      </div>
+    </div>
+
+    <div class="tablecontainer">
+      <div class="tableview">
+        <el-table :data="tasks" stripe>
+        <el-table-column prop="id" label="编号" width="110" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="task" label="任务" ></el-table-column>
+        <el-table-column label="状态" width="80">
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.completed" disabled></el-switch>
+          </template>
+        </el-table-column>
+      </el-table>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  computed: {
+    descriptions() {
+      return this.$store.state.tasks.descriptions || []
+    },
+    tasks() {
+      return this.$store.state.tasks.tasks || []
+    }
+  },
+  preFetch({ store }) {
+    return Promise.all([store.dispatch('tasks/fetchTasks'), store.dispatch('tasks/fetchDescriptions')])
+  },
   title() {
     return '首页'
   }
 }
 </script>
+<style lang="stylus" scoped>
+.jumbotron
+  width 100%
+  height 350px
+  display flex
+  flex-direction column
+
+  .desc
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+
+    p
+      margin 3px 0
+
+.tablecontainer
+  width 100%
+  display flex
+  justify-content center
+
+.tableview
+  width 900px
+</style>
