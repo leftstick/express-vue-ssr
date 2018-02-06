@@ -1,7 +1,7 @@
 const fs = require('fs')
+const uuidv4 = require('uuid/v4')
 const { createBundleRenderer } = require('vue-server-renderer')
 const logger = require('../assistant/logger')
-const { renderErrorHandler } = require('../assistant/ssr/errorHandler')
 const { isDev } = require('../assistant/utils/env')
 
 const { resolveFromRoot } = require('../assistant/utils/path')
@@ -74,4 +74,12 @@ module.exports.render = function(req, res, ssr) {
     res.send(html)
     logger.info(`Whole request cost : ${Date.now() - s}ms, URL : ${req.url}`)
   })
+}
+
+function renderErrorHandler({ err, req, res }) {
+  const errorID = uuidv4()
+
+  // Render Error Page or Redirect
+  res.status(500).send(`500 | Internal Server Error。<br/>你可以联系我们的工作人员，并把这个错误ID给他：${errorID}`)
+  logger.error(`During render [${errorID}]: ${req.url} || ${err.stack || err.message}`)
 }
