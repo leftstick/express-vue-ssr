@@ -19,25 +19,6 @@ const config = merge(baseConfig, {
       'process.env.VUE_ENV': '"client"'
     }),
 
-    // extract vendor chunks for better caching
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: function(module) {
-        // a module is extracted into the vendor chunk if...
-        return (
-          // it's inside node_modules
-          /node_modules/.test(module.context) &&
-          // and not a CSS file (due to extract-text-webpack-plugin limitation)
-          !/\.css$/.test(module.request)
-        )
-      }
-    }),
-
-    // extract webpack runtime & manifest to avoid vendor chunk hash changing
-    // on every build.
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest'
-    }),
     new VueSSRClientPlugin()
   ]
 })
@@ -47,16 +28,16 @@ if (isStage || isProduction) {
     // auto generate service worker
     new SWPrecachePlugin({
       cacheId: 'express-vue-ssr',
+      dontCacheBustUrlsMatching: /./,
       filename: 'service-worker.js',
       minify: true,
-      dontCacheBustUrlsMatching: /./,
-      staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
       runtimeCaching: [
         {
-          urlPattern: '/',
-          handler: 'networkFirst'
+          handler: 'networkFirst',
+          urlPattern: '/'
         }
-      ]
+      ],
+      staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/]
     })
   )
 }

@@ -2,7 +2,7 @@ module.exports.api = '/descriptions'
 
 module.exports.preHooks = []
 
-module.exports.get = async function(req, res) {
+module.exports.get = async function() {
   return {
     descriptions: [
       '这是一个基于express的，vue-ssr脚手架。',

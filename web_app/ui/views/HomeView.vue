@@ -3,8 +3,10 @@
     <div class="jumbotron">
       <div class="desc">
         <h1>欢迎来到vue-ssr</h1>
-        <br/>
-        <p v-for="desc of descriptions" :key="desc">
+        <br>
+        <p 
+          v-for="desc of descriptions" 
+          :key="desc">
           {{ desc }}
         </p>
       </div>
@@ -12,15 +14,27 @@
 
     <div class="tablecontainer">
       <div class="tableview">
-        <el-table :data="tasks" stripe>
-        <el-table-column prop="id" label="编号" width="110" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="task" label="任务" ></el-table-column>
-        <el-table-column label="状态" width="80">
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.completed" disabled></el-switch>
-          </template>
-        </el-table-column>
-      </el-table>
+        <el-table 
+          :data="tasks" 
+          stripe>
+          <el-table-column 
+            prop="id" 
+            label="编号" 
+            width="110" 
+            show-overflow-tooltip/>
+          <el-table-column 
+            prop="task" 
+            label="任务" />
+          <el-table-column 
+            label="状态" 
+            width="80">
+            <template slot-scope="scope">
+              <el-switch 
+                v-model="scope.row.completed" 
+                disabled/>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
   </div>
@@ -54,16 +68,3 @@ export default {
     display flex
     flex-direction column
     justify-content center
-    align-items center
-
-    p
-      margin 3px 0
-
-.tablecontainer
-  width 100%
-  display flex
-  justify-content center
-
-.tableview
-  width 900px
-</style>

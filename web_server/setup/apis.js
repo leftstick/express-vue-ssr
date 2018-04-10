@@ -26,7 +26,7 @@ function skipApiWithoutApiField(scannedValue) {
 }
 
 function wapperRouteHandler(handler, verb, mod) {
-  return function(req, res, next) {
+  return function(req, res) {
     handler(req, res)
       .then(data => {
         return res.json({

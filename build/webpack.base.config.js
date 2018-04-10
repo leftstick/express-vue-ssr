@@ -1,30 +1,20 @@
 const path = require('path')
-const webpack = require('webpack')
+const { VueLoaderPlugin } = require('vue-loader')
 const vueConfig = require('./vue-loader.config')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 const { isDev } = require('../web_server/assistant/utils/env')
 
 module.exports.baseConfig = {
-  output: {
-    path: path.resolve(__dirname, '../dist'),
-    chunkFilename: '[name].[chunkhash].bundle.js',
-    publicPath: '/dist/',
-    filename: '[name].[chunkhash].js'
-  },
-  resolve: {
-    alias: {
-      views: path.resolve(__dirname, '..', 'web_app', 'ui', 'views')
-    }
-  },
+  mode: isDev ? 'development' : 'production',
   module: {
     rules: [
       {
         enforce: 'pre',
-        test: /\.vue$/,
+        exclude: /node_modules/,
         loader: 'eslint-loader',
-        exclude: /node_modules/
+        test: /\.(js|vue)$/
       },
       {
         test: /\.vue$/,
@@ -36,9 +26,13 @@ module.exports.baseConfig = {
         ]
       },
       {
+        use: ['vue-style-loader', 'css-loader', 'stylus-loader'],
+        test: /\.styl(us)?$/
+      },
+      {
+        exclude: /node_modules/,
         test: /\.js$/,
-        use: ['babel-loader'].concat(!isDev ? [] : ['eslint-loader']),
-        exclude: /node_modules/
+        use: ['babel-loader']
       },
       {
         test: /\.(png|jpg|gif|svg|ttf|woff|eot|woff2)$/,
@@ -54,30 +48,34 @@ module.exports.baseConfig = {
       },
       {
         test: /\.css$/,
-        use: !isDev
-          ? ExtractTextPlugin.extract({
-              use: 'css-loader?minimize',
-              fallback: 'vue-style-loader'
-            })
-          : ['vue-style-loader', 'css-loader']
+        use: (!isDev ? [MiniCssExtractPlugin.loader] : ['vue-style-loader']).concat(['css-loader'])
       }
     ]
   },
-  performance: {
-    maxEntrypointSize: 300000,
-    hints: !isDev ? 'warning' : false
+  output: {
+    chunkFilename: '[name].[chunkhash].bundle.js',
+    filename: '[name].[chunkhash].js',
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/dist/'
   },
-  plugins: !isDev
-    ? [
-        new webpack.optimize.UglifyJsPlugin({
-          compress: { warnings: false }
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new ExtractTextPlugin({
-          filename: 'common.[chunkhash].css'
-        })
-      ]
-    : [new FriendlyErrorsPlugin()]
+  performance: {
+    hints: !isDev ? 'warning' : false,
+    maxEntrypointSize: 300000
+  },
+  plugins: [new VueLoaderPlugin()].concat(
+    !isDev
+      ? [
+          new MiniCssExtractPlugin({
+            filename: 'extractedcss.[name].css'
+          })
+        ]
+      : [new FriendlyErrorsPlugin()]
+  ),
+  resolve: {
+    alias: {
+      views: path.resolve(__dirname, '..', 'web_app', 'ui', 'views')
+    }
+  }
 }
 
 module.exports.resolveEnv = function() {

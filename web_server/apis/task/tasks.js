@@ -4,7 +4,7 @@ module.exports.api = '/tasks'
 
 module.exports.preHooks = []
 
-module.exports.get = async function(req, res) {
+module.exports.get = async function() {
   return {
     tasks: [
       {
