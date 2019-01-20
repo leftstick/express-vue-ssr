@@ -9,7 +9,7 @@ if (!fs.existsSync(logPath)) {
   fs.mkdirSync(logPath)
 }
 
-module.exports = new winston.Logger({
+module.exports = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: 'debug'
@@ -17,16 +17,12 @@ module.exports = new winston.Logger({
 
     new DailyRotateFile({
       filename: `${logPath}/info.log`,
-      level: 'info',
-      name: 'info-log',
-      prepend: true
+      level: 'info'
     }),
 
     new DailyRotateFile({
       filename: `${logPath}/error.log`,
-      level: 'error',
-      name: 'error-log',
-      prepend: true
+      level: 'error'
     })
   ]
 })

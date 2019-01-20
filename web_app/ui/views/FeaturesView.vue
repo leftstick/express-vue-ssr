@@ -1,7 +1,5 @@
 <template>
-  <div >
-    功能
-  </div>
+  <div>功能</div>
 </template>
 <script>
 export default {

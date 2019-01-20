@@ -1,5 +1,5 @@
 {
-  "presets": [["env", { "modules": false }]],
+  "presets": [["@babel/preset-env", { "modules": false }]],
   "plugins": [
     [
       "component",
@@ -8,7 +8,6 @@
         "styleLibraryName": "theme-chalk"
       }
     ],
-    "syntax-dynamic-import",
-    "transform-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread", "@babel/plugin-syntax-dynamic-import"
   ]
 }
