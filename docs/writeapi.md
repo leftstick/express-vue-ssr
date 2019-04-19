@@ -8,32 +8,29 @@
 
 然后，在新建的目录下，新增文件，文件名随意，但不可以`_`作为文件首字母(详情，参考[API 扫描](#api-scan))。
 
-一个文件代表一个“资源”，所以我们不会有“很多个”方法写在一个文件里的场景。而针对一个资源，也有且仅有`http`协议支持的几种操作方法：`get`、 `post`、 `put`、 `patch`、`delete`、 `head`、 `options`。通过“声明式”的编码范式，一个`API`的书写是这个样子的，我们就以`web_server/apis/user/currentUser.js`举例说明：
+一个文件代表一个“资源”，所以我们不推荐“很多个”方法写在一个文件里的场景。而针对一个资源，也有且仅有`http`协议支持的几种操作方法：`get`、 `post`、 `put`、 `patch`、`delete`、 `head`、 `options`。通过“声明式”的编码范式，一个`API`的书写是这个样子的，我们就以`web_server/apis/user/currentUser.js`举例说明：
 
 ```javascript
 // 引入外部依赖
 const AuthProxy = require('../../proxy/mixin/auth')
+const { jsonResult } = require('../../assistant/utils/http')
 
-// 声明这个资源会以 /api/user/currentUser 的地址暴露给外部应用
-// 其中 /api 是框架自动添加的前缀部分，开发人员只要声明资源部分即可
-module.exports.api = '/user/currentUser'
-
-// 这里可以指定一些资源预检查策略，譬如：该资源要求只有登录用户才能访问
-// 具体用法，可以参考 notificationCount.js => preHooks
-// 框架会在该api生效时，自动处理preHooks里的内容
-module.exports.preHooks = []
-
-// 这里就是声明一个资源的get请求是如何实现的
-// 要求方法必须是async的，返回值必须是literal object
-// 框架会自动将返回值转化以json形式返回给客户端
-module.exports.get = async function(req, res) {
+/**
+ *
+ * @method get
+ * @api /user/currentUser
+ *
+ **/
+module.exports.getUser = async function(req, res) {
   // 既然是获取当前登录用户的信息，那么如果该用户已经登录(在session中)
   // 直接返回登录状态为true，并附上用户信息
   if (req.session && req.session.user) {
-    return {
-      valid: true,
-      userInfo: req.session.user
-    }
+    return res.json(
+      jsonResult({
+        valid: true,
+        userInfo: req.session.user
+      })
+    )
   }
 
   // 如果session中不存在用户信息，那么尝试通过存在cookie中的token获取用户信息
@@ -42,23 +39,30 @@ module.exports.get = async function(req, res) {
 
   // 当前面获取到的用户信息为null时，直接返回用户未登录状态
   if (!userInfo) {
-    return { valid: false }
+    return res.json(jsonResult({ valid: false }))
   }
 
   // 如果用户信息存在，存入session
   req.session.user = userInfo
 
   // 返回登录状态为true，并附上用户信息
-  return {
-    valid: true,
-    userInfo
-  }
+  return res.json(
+    jsonResult({
+      valid: true,
+      userInfo
+    })
+  )
 }
 
-// 这里是针对这个资源的删除操作，可以想象，currentUser 的删除，其实就是注销(或者登出)
+/**
+ *
+ * @method delete
+ * @api /user/currentUser
+ *
+ **/
 module.exports.delete = async function(req, res) {
   const result = await AuthProxy.signout(req, res)
-  return result
+  return res.json(jsonResult(result))
 }
 ```
 
